@@ -1,4 +1,4 @@
-// NOVA document ops - every mutation is an undoable Command.
+// NOVA document ops - factories for undoable layer commands.
 import type { Command } from '../core/command-types.ts';
 import { createId } from '../core/ids.ts';
 import type { NovaDocument, Layer, LayerKind, Transform, Adjustments } from '../project/types.ts';
@@ -37,15 +37,4 @@ export function makeDeleteLayer(doc: NovaDocument, id: string): Command {
       doc.layers.splice(idx, 1);
     },
     undo: () => { if (removed) doc.layers.splice(idx, 0, removed); } };
-}
-
-export function makeSetProp(doc: NovaDocument, id: string, key: string, value: any): Command {
-  const layer = findLayer(doc, id);
-  if (!layer) throw new Error('NOVA_E_LAYER_NOT_FOUND');
-  const before = (layer as any)[key];
-  return { id: 'set:' + id + ':' + key, label: 'Set ' + key,
-    mergeKey: 'set:' + id + ':' + key,
-    execute: () => { (layer as any)[key] = value; },
-    undo: () => { (layer as any)[key] = before; },
-    mergeInto: (next) => { if (next.mergeKey) { /* keep first before */ } } };
 }
