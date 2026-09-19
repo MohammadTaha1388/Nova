@@ -1,6 +1,6 @@
 // NOVA document - undoable property-set commands with drag coalescing.
 import type { Command } from '../core/command-types.ts';
-import type { NovaDocument, Layer } from '../project/types.ts';
+import type { NovaDocument } from '../project/types.ts';
 import { findLayer } from './ops.ts';
 
 export function makeSetProp(doc: NovaDocument, id: string, key: string, value: any): Command {
@@ -15,8 +15,9 @@ export function makeSetProp(doc: NovaDocument, id: string, key: string, value: a
     execute: () => { target[key] = value; },
     undo: () => { target[key] = before; },
     mergeInto: (next: Command) => {
-      // Coalesced drag: apply the newer value while keeping the FIRST undo value.
-      if (next.mergeKey === mergeKeyOf(cmd)) next.execute();
+      // Stack already verified same mergeKey. Apply the newer value;
+      // `before` stays from the FIRST command => one undo step per drag.
+      next.execute();
     },
   };
 }
