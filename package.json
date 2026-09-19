@@ -3,15 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "NOVA Studio — lightweight, offline-first, AI-native creative suite",
-  "engines": {
-    "node": ">=20.0.0"
-  },
+  "description": "NOVA Studio - lightweight, offline-first, AI-native creative suite",
+  "engines": { "node": ">=20.0.0" },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types tests/"
+    "test": "node --test --experimental-strip-types \"tests/*.test.ts\""
   },
   "devDependencies": {
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "@types/node": "^26.0.0"
   }
 }
