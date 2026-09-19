@@ -1,5 +1,4 @@
 // NOVA Core - typed synchronous event bus. Zero dependencies.
-// Erasable-syntax only: runs under node --experimental-strip-types.
 export type Handler<T> = (p: T) => void;
 
 export class EventBus {
@@ -15,11 +14,11 @@ export class EventBus {
     const w = (p: any) => { this.off(t, w); h(p); };
     this.on(t, w);
   }
-  emit(t: string, p: any): void {
+  emit<T>(t: string, p: T): void {
     const s = this.m.get(t);
     if (!s) return;
     for (const h of [...s]) {
-      try { h(p); } catch (e) { console.error('[events]', t, e); }
+      try { (h as Handler<T>)(p); } catch (e) { console.error('[events]', t, e); }
     }
   }
 }
